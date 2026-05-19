@@ -1,20 +1,19 @@
-# OS junk files
-[Dd]esktop.ini
-[Tt]humbs.db
-.DS_Store
+# Ignore everything by default
+*
 
-# IDEs and editors
+# Allow specific directories
+!_Project/
+!CBS/
+!CBS_External/
+
+# Allow specific root files & Unity meta files
+!.gitignore
+!_Project.meta
+!CBS.meta
+!CBS_External.meta
+
+# Keep IDE settings and agent folders ignored inside the allowed directories just in case
 .vscode/
 .vs/
-*.suo
-*.user
-*.userprefs
-*.pidb
-*.csproj
-*.unityproj
-*.sln
-*.tmp
-
-# Custom agent folders and system files
 .agents/
 .utmp/
