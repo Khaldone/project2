@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d9c408298248faa8310c2e1c7b72d7, type: 3}
+  m_Name: Bus Ball-Ball Collision
+  m_EditorClassIdentifier: 
+  _busName: Ball-Ball Collision
+  _mixerGroup: {fileID: -1460753783252910111, guid: 829354012ffea4f45b2db2be7141b1a5, type: 2}
+  _baseVolume: 1
+  _duckingSpeed: 5
+  _duckingTargets:
+  - BusName: Music
+    DuckAmount: 0.5
+    UseNameFilter: 0
+    FilterNames: []
+    IsWhitelist: 0
+  - BusName: Ball-Cushion Collision
+    DuckAmount: 0
+    UseNameFilter: 0
+    FilterNames: []
+    IsWhitelist: 0

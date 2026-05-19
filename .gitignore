@@ -1,0 +1,20 @@
+# OS junk files
+[Dd]esktop.ini
+[Tt]humbs.db
+.DS_Store
+
+# IDEs and editors
+.vscode/
+.vs/
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.csproj
+*.unityproj
+*.sln
+*.tmp
+
+# Custom agent folders and system files
+.agents/
+.utmp/

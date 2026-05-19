@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Imgur.NET</id>
+    <version>0.1.0</version>
+    <authors>Imgur</authors>
+    <license type="file">LICENSE</license>
+    <licenseUrl>https://aka.ms/deprecateLicenseUrl</licenseUrl>
+    <readme>README.md</readme>
+    <description>Imgur API client for .NET and Unity.</description>
+    <tags>Imgur</tags>
+    <repository type="git" url="https://github.com/AnnulusGames/Imgur.NET" commit="7a474e9261c7d224a510d064624c340bf6756cd4" />
+    <dependencies>
+      <group targetFramework="net6.0">
+        <dependency id="System.Net.Http.Json" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="8.0.0" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0" />
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="System.Net.Http.Json" version="8.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Json" version="8.0.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

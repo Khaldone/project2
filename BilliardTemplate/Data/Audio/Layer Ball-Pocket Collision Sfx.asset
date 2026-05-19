@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4333105695c4697b379682f763e047e, type: 3}
+  m_Name: Layer Ball-Pocket Collision Sfx
+  m_EditorClassIdentifier: 
+  LayerName: Ball-Pocket Collision
+  Bus: {fileID: 11400000, guid: 72b434a2968036d45a1cfadf831b242e, type: 2}
+  SelectorType: 1
+  Clips:
+  - Name: 0
+    Clip: {fileID: 8300000, guid: 817cde2211d74a14ca3b653eaf5e12c8, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 1
+    Clip: {fileID: 8300000, guid: 0dd4d3d36d8b1934faf0658dc8fb7fe4, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 2
+    Clip: {fileID: 8300000, guid: f86a8f9d87ad8294594dcbf057053e39, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 3
+    Clip: {fileID: 8300000, guid: 35dde13e257b87a4fb24195534fc1578, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 4
+    Clip: {fileID: 8300000, guid: bce109bc2a3cf3c449ed2690ab0c5ead, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 5
+    Clip: {fileID: 8300000, guid: a720aa1cf9ac373418c222b97da68424, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 6
+    Clip: {fileID: 8300000, guid: 66c2531d598c1014a84454d38b6a66ca, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  - Name: 7
+    Clip: {fileID: 8300000, guid: badb2167fb9917b4385fdb72b8b1c022, type: 3}
+    Volume: 1
+    Delay: 0
+    Loop: 0
+    PitchOffsetMinMax: {x: 0, y: 0}
+    BypassPriorityFade: 0
+    Priority: 60
+  IntensityRanges:
+  - Min: 0
+    Max: 0.125
+    ClipIndices: 00000000
+  - Min: 0.125
+    Max: 0.25
+    ClipIndices: 01000000
+  - Min: 0.25
+    Max: 0.375
+    ClipIndices: 02000000
+  - Min: 0.375
+    Max: 0.5
+    ClipIndices: 03000000
+  - Min: 0.5
+    Max: 0.625
+    ClipIndices: 04000000
+  - Min: 0.625
+    Max: 0.75
+    ClipIndices: 05000000
+  - Min: 0.75
+    Max: 0.875
+    ClipIndices: 06000000
+  - Min: 0.875
+    Max: 1
+    ClipIndices: 07000000
+  PriorityFadeSteps:
+  - 0.5
+  - 0.1
+  - 0
+  FadeSpeed: 10

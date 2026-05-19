@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 866563f05963462fb986d955553f82e1, type: 3}
+  m_Name: Layer Music
+  m_EditorClassIdentifier: 
+  PlaylistName: Default
+  Bus: {fileID: 11400000, guid: f60218b22c642314197504334b462b52, type: 2}
+  Tracks:
+  - Name: Spring On Jazz
+    Clip: {fileID: 8300000, guid: c7b5d857c5163df41a59772db2827f4b, type: 3}
+    Volume: 1
+  - Name: Jazz
+    Clip: {fileID: 8300000, guid: 96b6715357cdffe4880de55eab25ee1c, type: 3}
+    Volume: 1
+  Shuffle: 1
+  Repeat: 1

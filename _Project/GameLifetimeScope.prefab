@@ -1,0 +1,101 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6206178585895819320
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1155671846898373356}
+  - component: {fileID: 7559575763302024305}
+  - component: {fileID: 3480983345941516868}
+  - component: {fileID: 5988493925879650427}
+  m_Layer: 0
+  m_Name: GameLifetimeScope
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1155671846898373356
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206178585895819320}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7559575763302024305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206178585895819320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d13ee032e96c7a54a95916099d3b3b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parentReference:
+    TypeName: 
+  autoRun: 1
+  autoInjectGameObjects: []
+  _moderationThresholds:
+    sexualThreshold: 0.09
+    sexualMinorsThreshold: 0
+    violenceThreshold: 0.25
+    violenceGraphicThreshold: 0.1
+    harassmentThreshold: 0.25
+    hateThreshold: 0.25
+    hateThreateningThreshold: 0.15
+    selfHarmThreshold: 0.02
+    _serialized: 1
+  _moderationTimeoutSeconds: 12
+  _avatarUploadTimeoutSeconds: 30
+  _forceServerCheck: 1
+  _moderationParameters:
+    apiKey: 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
+    apiKeyEncryption: 0
+    apiKeyRemoteConfigKey: openai_api_key
+    apiKeyEncryptionPassword: b02fd072-d3ea-44c1-8756-a74bab74c126
+    moderationModel: 1
+    timeout: 0
+    throttle: 0
+    _serialized: 1
+--- !u!114 &3480983345941516868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206178585895819320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4e077adc1f6daf4e9eb907b5dbb3eeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  OutputFolderName: HierarchyExports
+  AlignmentColumn: 60
+--- !u!114 &5988493925879650427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6206178585895819320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf5e99d53da902c42adfb6cfe974d8a9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AlignmentColumn: 70
