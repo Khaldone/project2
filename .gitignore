@@ -5,6 +5,7 @@
 !_Project/
 !CBS/
 !CBS_External/
+!Mobile Monetization Pro/
 
 # Allow .gitignore itself
 !.gitignore
@@ -13,6 +14,7 @@
 !_Project/**/
 !CBS/**/
 !CBS_External/**/
+!Mobile Monetization Pro/**/
 
 # Allow whitelisted file extensions inside the traversed folders
 !_Project/**/*.cs
@@ -32,3 +34,10 @@
 !CBS_External/**/*.txt
 !CBS_External/**/*.xml
 !CBS_External/**/*.yaml
+
+!Mobile Monetization Pro/**/*.cs
+!Mobile Monetization Pro/**/*.json
+!Mobile Monetization Pro/**/*.txt
+!Mobile Monetization Pro/**/*.xml
+!Mobile Monetization Pro/**/*.yaml
+
