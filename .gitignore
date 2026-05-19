@@ -22,6 +22,7 @@
 !_Project/**/*.txt
 !_Project/**/*.xml
 !_Project/**/*.yaml
+!_Project/**/*.asmdef
 
 !CBS/**/*.cs
 !CBS/**/*.json
