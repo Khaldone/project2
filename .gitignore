@@ -1,19 +1,34 @@
 # Ignore everything by default
 *
 
-# Allow specific directories
+# Allow the specific root directories (so Git can traverse them)
 !_Project/
 !CBS/
 !CBS_External/
 
-# Allow specific root files & Unity meta files
+# Allow .gitignore itself
 !.gitignore
-!_Project.meta
-!CBS.meta
-!CBS_External.meta
 
-# Keep IDE settings and agent folders ignored inside the allowed directories just in case
-.vscode/
-.vs/
-.agents/
-.utmp/
+# Allow all subdirectories inside the whitelisted folders to be traversed
+!_Project/**/
+!CBS/**/
+!CBS_External/**/
+
+# Allow whitelisted file extensions inside the traversed folders
+!_Project/**/*.cs
+!_Project/**/*.json
+!_Project/**/*.txt
+!_Project/**/*.xml
+!_Project/**/*.yaml
+
+!CBS/**/*.cs
+!CBS/**/*.json
+!CBS/**/*.txt
+!CBS/**/*.xml
+!CBS/**/*.yaml
+
+!CBS_External/**/*.cs
+!CBS_External/**/*.json
+!CBS_External/**/*.txt
+!CBS_External/**/*.xml
+!CBS_External/**/*.yaml
