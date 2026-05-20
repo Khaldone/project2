@@ -1,7 +1,6 @@
 using UnityEngine;
 using Firebase.Messaging;
 using System.Collections;
-
 //#if UNITY_IOS
 //using Unity.Notifications.iOS;
 //#endif

@@ -1,10 +1,13 @@
 // Assets/_Project/3_Presentation/TrophyRoad/TrophyRoadPresenter.cs
-using System;
-using System.Collections.Generic;
 using Billiards.Core.Progression;
 using Billiards.CoreDomain.Services;
+using Billiards.CoreDomain.Telemetry;
 using Cysharp.Threading.Tasks;
+using Sentry.Unity;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
+using VContainer;
 
 namespace Billiards.Presentation.TrophyRoad
 {
@@ -13,15 +16,19 @@ namespace Billiards.Presentation.TrophyRoad
         private readonly ITrophyRoadOrchestrator _orchestrator;
         private readonly ITrophyRoadView _view;
         private readonly IAssetDeliveryService _assetService;
+        private readonly ITelemetryService _telemetryService;
 
+        [Inject]
         public TrophyRoadPresenter(
             ITrophyRoadOrchestrator orchestrator,
             ITrophyRoadView view,
-            IAssetDeliveryService assetService)
+            IAssetDeliveryService assetService,
+            ITelemetryService telemetryService)
         {
             _orchestrator = orchestrator;
             _view = view;
             _assetService = assetService;
+            _telemetryService = telemetryService;
         }
 
         public void Start()
@@ -44,7 +51,11 @@ namespace Billiards.Presentation.TrophyRoad
 
                 // Await the combined node generation pass and DOTween slider animation loop
                 await _view.RenderTrack(m, _orchestrator.CurrentCups, LoadSpriteIconAsync);
-
+                int milestoneIndex = 1;
+                var contextData = new Dictionary<string, string> { { "milestone_node", milestoneIndex.ToString() } };
+                _telemetryService.AddBreadcrumb("Player successfully triggered claimed reward milestone validation node click.", "ui_interaction", "click", contextData);
+                SentrySdk.CaptureMessage("Test event");
+                UnityEngine.Debug.Log("Captured");
                 _view.SetInteractionLock(false);
             }
             catch (Exception ex)

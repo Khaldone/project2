@@ -4,12 +4,14 @@ using Billiards.CoreDomain.Hardware;
 using Billiards.CoreDomain.Monetization;
 using Billiards.CoreDomain.Progression;
 using Billiards.CoreDomain.Services;
+using Billiards.CoreDomain.Telemetry;
+using Billiards.Infrastructure.Assets;
 using Billiards.Infrastructure.Authentication;
 using Billiards.Infrastructure.Authentication.NativeAuth;
-using Billiards.Infrastructure.Progression;
 using Billiards.Infrastructure.Backend;
-using Billiards.Infrastructure.Assets;
+using Billiards.Infrastructure.Progression;
 using Billiards.Presentation;
+using Billiards.Presentation.Telemetry;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -108,9 +110,20 @@ namespace Billiards.Bootstrapper
             
             // Global Message Broker
             builder.Register<MessageBroker>(Lifetime.Singleton).As<IMessageBroker>();
-            
+
             // Note: If your StoreCache also needs to be global, put it here too!
             //builder.Register<StoreCache>(Lifetime.Singleton);
+
+            // Register Sentry telemetry system implementation as a persistent global singleton service
+            builder.Register<SentryTelemetryWrapper>(Lifetime.Singleton)
+                   .As<ITelemetryService>();
+
+            // Ensure initialization execution parameters run immediately on app bootstrap sequences
+            builder.RegisterBuildCallback(container =>
+            {
+                var telemetryService = container.Resolve<ITelemetryService>();
+                telemetryService.Initialize();
+            });
         }
 
 

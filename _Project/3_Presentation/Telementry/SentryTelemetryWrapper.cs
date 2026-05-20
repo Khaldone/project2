@@ -1,66 +1,138 @@
-// Assets/Scripts/Presentation/Telemetry/SentryTelemetryWrapper.cs
-using System;
-using System.Collections.Generic;
+// Path: Assets/_Project/3_Presentation/Telementry/SentryTelemetryWrapper.cs
+using Billiards.CoreDomain.Telemetry;
 using Sentry;
 using Sentry.Unity;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class SentryTelemetryWrapper : MonoBehaviour, ITelemetryService
+namespace Billiards.Presentation.Telemetry
 {
-    private void Awake()
+    public sealed class SentryTelemetryWrapper : ITelemetryService
     {
-        // Capture all unhandled Unity log errors automatically
-        Application.logMessageReceived += OnUnityLogMessage;
-    }
-
-
-    public void SetUserContext(string playerId, string currentScene)
-    {
-        SentrySdk.ConfigureScope(scope =>
+        public void Initialize()
         {
-            scope.User = new SentryUser { Id = playerId };
-            scope.SetTag("Scene", currentScene);
-        });
-    }
+            // Evaluate target operating environment variables dynamically at startup
+            string runningEnvironment = DetermineEnvironment();
+            string bundleVersion = $"{Application.identifier}@{Application.version}";
 
+            SentrySdk.ConfigureScope(scope =>
+            {
+                // Assign global platform metadata to the persistent thread context
+                scope.Environment = runningEnvironment;
 
-    public void LeaveBreadcrumb(string category, string message, Dictionary<string, string> data = null)
-    {
-        SentrySdk.AddBreadcrumb(
-            message: message,
-            category: category,
-            type: "default",
-            data: data
-        );
-    }
+                // Explicitly tags the release variant for server stack-trace map matching
+                scope.SetTag("build_type", Debug.isDebugBuild ? "debug_build" : "release_build");
+                scope.SetTag("unity_version", Application.unityVersion);
+                scope.SetTag("platform", Application.platform.ToString());
+            });
 
+            // Log operational breadcrumb tracing to verify configuration handshake
+            var contextDetails = new Dictionary<string, string>
+            {
+                { "environment", runningEnvironment },
+                { "release_version", bundleVersion }
+            };
 
-    public void CaptureException(Exception exception)
-    {
-        SentrySdk.CaptureException(exception);
-    }
+            AddBreadcrumb("Programmatic release tracking and environment tags bound to global Sentry scope.", "system", "lifecycle", contextDetails);
+        }
 
-
-    public void CaptureMessage(string message, TelemetryLevel level)
-    {
-        SentryLevel sentryLevel = level switch
+        /// <summary>
+        /// Contextually derives the exact target execution tier without exposing hardcoded flags.
+        /// </summary>
+        private string DetermineEnvironment()
         {
-            TelemetryLevel.Warning => SentryLevel.Warning,
-            TelemetryLevel.Error => SentryLevel.Error,
-            _ => SentryLevel.Info
-        };
+#if UNITY_EDITOR
+            return "development_editor";
+#elif DEVELOPMENT_BUILD
+            return "staging_qa";
+#else
+            // Strict enforcement for raw production builds
+            return "production";
+#endif
+        }
 
-
-        SentrySdk.CaptureMessage(message, sentryLevel);
-    }
-
-
-    private void OnUnityLogMessage(string logString, string stackTrace, LogType type)
-    {
-        if (type == LogType.Exception || type == LogType.Error)
+        public void SetUserContext(string anonymizedPlayerId)
         {
-            // Sentry's Unity SDK handles native crashes automatically,
-            // but we can route standard Unity Debug.LogErrors here as well if needed.
+            if (string.IsNullOrEmpty(anonymizedPlayerId)) return;
+
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.User = new SentryUser { Id = anonymizedPlayerId };
+            });
+        }
+
+        public void SetTag(string key, string value)
+        {
+            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) return;
+            SentrySdk.ConfigureScope(scope => scope.SetTag(key, value));
+        }
+
+        public void RemoveTag(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return;
+            SentrySdk.ConfigureScope(scope => scope.UnsetTag(key));
+        }
+
+        public void AddBreadcrumb(string message, string category = null, string type = null, Dictionary<string, string> data = null)
+        {
+            if (string.IsNullOrEmpty(message)) return;
+
+            var breadcrumbData = data != null ? new Dictionary<string, string>(data) : null;
+
+            SentrySdk.AddBreadcrumb(
+                message: message,
+                category: category ?? "gameplay",
+                type: type ?? "default",
+                data: breadcrumbData,
+                level: BreadcrumbLevel.Info
+            );
+        }
+
+        public void CaptureException(Exception exception, Dictionary<string, string> extraContext = null)
+        {
+            if (exception == null) return;
+
+            SentrySdk.CaptureException(exception, scope =>
+            {
+                if (extraContext != null)
+                {
+                    foreach (var kvp in extraContext)
+                    {
+                        scope.SetExtra(kvp.Key, kvp.Value);
+                    }
+                }
+            });
+        }
+
+        public void CaptureMessage(string message, TelemetrySeverity severity = TelemetrySeverity.Info, Dictionary<string, string> extraContext = null)
+        {
+            if (string.IsNullOrEmpty(message)) return;
+
+            SentrySdk.CaptureMessage(message, scope =>
+            {
+                scope.Level = MapSeverity(severity);
+                if (extraContext != null)
+                {
+                    foreach (var kvp in extraContext)
+                    {
+                        scope.SetExtra(kvp.Key, kvp.Value);
+                    }
+                }
+            });
+        }
+
+        private SentryLevel MapSeverity(TelemetrySeverity severity)
+        {
+            return severity switch
+            {
+                TelemetrySeverity.Debug => SentryLevel.Debug,
+                TelemetrySeverity.Info => SentryLevel.Info,
+                TelemetrySeverity.Warning => SentryLevel.Warning,
+                TelemetrySeverity.Error => SentryLevel.Error,
+                TelemetrySeverity.Fatal => SentryLevel.Fatal,
+                _ => SentryLevel.Info
+            };
         }
     }
 }
