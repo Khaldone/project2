@@ -21,6 +21,9 @@ namespace MobileMonetizationPro
                     app = Firebase.FirebaseApp.DefaultInstance;
 
                     // Set a flag here to indicate whether Firebase is ready to use by your app.
+                    UnityEngine.Debug.Log(System.String.Format(
+                       "Success: ", dependencyStatus));
+                    // Firebase Unity SDK is not safe to use here.
                 }
                 else
                 {

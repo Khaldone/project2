@@ -9,7 +9,9 @@
         "Presentation",
         "AiToolbox",
         "Unity.Addressables",
-        "Unity.ResourceManager"
+        "Unity.ResourceManager",
+        "Firebase.App.Internal",
+        "FirebaseMessagingActivityGenerator"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

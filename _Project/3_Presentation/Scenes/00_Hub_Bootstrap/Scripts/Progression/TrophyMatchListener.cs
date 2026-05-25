@@ -2,7 +2,7 @@
 using VContainer.Unity;
 using System;
 using UnityEngine;
-
+using Billiards.Core.Analytics;
 
 public class TrophyMatchListener : IStartable, IDisposable
 {

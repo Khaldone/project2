@@ -1,11 +1,24 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
   <application>
     <!-- Google Mobile Ads App ID (Required by SDK initialization) -->
-    <meta-data
-        android:name="com.google.android.gms.ads.APPLICATION_ID"
-        android:value="ca-app-pub-3940256099942544~3347511713"/>
-
+    <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-3940256099942544~3347511713" />
+    <!-- ============================================================
+         FIREBASE AUTO-INIT SUPPRESSION
+         Firebase's FirebaseInitProvider ContentProvider runs BEFORE
+         Unity starts and registers the default GMS client with the
+         Firebase project. This poisons the GMS credential state
+         that GPGS needs for Authenticate(). Removing it forces
+         Firebase to only initialize when our code explicitly calls
+         CheckAndFixDependenciesAsync() — which already happens in
+         FirebaseTelemetryBackend.InitializeAsync().
+         ============================================================ -->
+    <provider android:name="com.google.firebase.provider.FirebaseInitProvider" android:authorities="com.billiards.yalla.firebaseinitprovider" android:exported="false" tools:node="remove" />
+    <!-- Prevent Firebase Analytics from auto-collecting before our
+         explicit initialization. Re-enabled in FirebaseTelemetryBackend. -->
+    <meta-data android:name="firebase_analytics_collection_enabled" android:value="false" />
+    <!-- Prevent FCM from auto-initializing its token retrieval at startup. -->
+    <meta-data android:name="firebase_messaging_auto_init_enabled" android:value="false" />
     <activity android:name="com.unity3d.player.UnityPlayerActivity" android:theme="@style/UnityThemeSelector">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />

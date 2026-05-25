@@ -20,6 +20,7 @@ namespace Billiards.Presentation
         private readonly IPlayerDataService _playerDataService;
         private readonly IEnumerable<INativeAuthService> _nativeAuthServices;
         private readonly ILocalSaveService _localSaveService;
+        private readonly IPlatformServicesGate _platformGate;
 
         private INotificationQueue _notificationQueue;
 
@@ -28,13 +29,15 @@ namespace Billiards.Presentation
             PlayerSession playerSession,
             IPlayerDataService playerDataService,
             IEnumerable<INativeAuthService> nativeAuthServices,
-            ILocalSaveService localSaveService)
+            ILocalSaveService localSaveService,
+            IPlatformServicesGate platformGate)
         {
             _authService = authService;
             _playerSession = playerSession;
             _playerDataService = playerDataService;
             _nativeAuthServices = nativeAuthServices;
             _localSaveService = localSaveService;
+            _platformGate = platformGate;
         }
 
         private async UniTask TryResolveQueueAsync(CancellationToken token)
@@ -80,6 +83,10 @@ namespace Billiards.Presentation
 
         public async UniTask StartAsync(CancellationToken cancellation)
         {
+            // Await the platform services gate to ensure Firebase (which runs GMS resolution)
+            // has finished initializing and released any native GMS locks.
+            await _platformGate.WaitUntilReadyAsync(cancellation);
+
             var nativeAuth = System.Linq.Enumerable.FirstOrDefault(_nativeAuthServices);
 
             if (nativeAuth != null)

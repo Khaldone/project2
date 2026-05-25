@@ -1,7 +1,7 @@
 // Assets/Scripts/CoreDomain/Match/MatchCoordinator.cs
 using System;
 using System.Collections.Generic;
-
+using Billiards.Core.Analytics;
 public partial class MatchCoordinator
 {
     private readonly IMatchBroadcaster _broadcaster;

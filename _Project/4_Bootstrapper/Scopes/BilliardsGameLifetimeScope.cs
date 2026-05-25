@@ -1,5 +1,6 @@
 using AiToolbox;
 using Billiards.Bootstrapper;
+using Billiards.Core.Analytics;
 using Billiards.CoreDomain.Hardware;
 using Billiards.CoreDomain.Monetization;
 using Billiards.CoreDomain.Progression;
@@ -10,6 +11,7 @@ using Billiards.Infrastructure.Authentication;
 using Billiards.Infrastructure.Authentication.NativeAuth;
 using Billiards.Infrastructure.Backend;
 using Billiards.Infrastructure.Progression;
+using Billiards.Infrastructure.Telemetry;
 using Billiards.Presentation;
 using Billiards.Presentation.Telemetry;
 using UnityEngine;
@@ -124,9 +126,22 @@ namespace Billiards.Bootstrapper
                 var telemetryService = container.Resolve<ITelemetryService>();
                 telemetryService.Initialize();
             });
+
+            // 2. Register Anti-Corruption Layer Backend Drivers
+            builder.Register<ITelemetryBackend, PlayFabTelemetryBackend>(Lifetime.Singleton);
+            builder.Register<ITelemetryBackend, FirebaseTelemetryBackend>(Lifetime.Singleton);
+
+            // Platform Services Gate — coordinates Firebase init completion with GPGS auth.
+            // GlobalAnalyticsTracker (producer) marks ready after backends init;
+            // LoginEntryPoint (consumer) awaits before touching Google Play Services.
+            builder.Register<PlatformServicesGate>(Lifetime.Singleton).As<IPlatformServicesGate>();
+
+            // 3. Register the globally bound Passive Listeners Component
+            // Injects directly as IAsyncStartable / IDisposable inside VContainer registration frames
+            builder.RegisterEntryPoint<GlobalAnalyticsTracker>(Lifetime.Singleton);
+
         }
-
-
     }
-
 }
+
+

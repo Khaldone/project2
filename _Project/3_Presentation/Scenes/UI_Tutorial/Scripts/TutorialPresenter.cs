@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using VContainer.Unity;
-
+using Billiards.Core.Analytics;
 
 public class TutorialPresenter : IStartable, IDisposable
 {

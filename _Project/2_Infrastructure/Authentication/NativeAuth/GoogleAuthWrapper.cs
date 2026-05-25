@@ -24,8 +24,20 @@ namespace Billiards.Infrastructure.Authentication.NativeAuth
             AuthScope.PROFILE,
         };
 
+        private static bool _initialized = false;
+
+        private static void InitializePlatform()
+        {
+            if (_initialized) return;
+            PlayGamesPlatform.DebugLogEnabled = true;
+            PlayGamesPlatform.Activate();
+            _initialized = true;
+            Debug.Log("[GoogleAuthWrapper] PlayGamesPlatform Activated and Debug Logs Enabled.");
+        }
+
         public async UniTask<string> AuthenticateAsync()
         {
+            InitializePlatform();
             Debug.Log("AAA Pipeline: Triggering Google Play Games prompt...");
 
             var tcs = new UniTaskCompletionSource<string>();
@@ -75,6 +87,7 @@ namespace Billiards.Infrastructure.Authentication.NativeAuth
 
         public async UniTask<string> TrySilentAuthenticateAsync()
         {
+            InitializePlatform();
             Debug.Log("[GoogleAuthWrapper] Attempting silent authentication...");
             var tcs = new UniTaskCompletionSource<string>();
 

@@ -16,7 +16,8 @@
         "UniTask.DOTween",
         "DOTween.Modules",
         "Google.Play.Games",
-        "SimpleScrollSnap"
+        "SimpleScrollSnap",
+        ""
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

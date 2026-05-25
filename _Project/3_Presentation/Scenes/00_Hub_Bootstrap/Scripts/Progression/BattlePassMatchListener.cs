@@ -1,7 +1,7 @@
 // Assets/_Project/Scenes/00_Hub_Bootstrap/Scripts/Progression/BattlePassMatchListener.cs
 using VContainer.Unity;
 using System;
-
+using Billiards.Core.Analytics;
 
 public class BattlePassMatchListener : IStartable, IDisposable
 {
