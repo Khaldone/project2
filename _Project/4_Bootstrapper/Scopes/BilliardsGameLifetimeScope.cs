@@ -14,6 +14,8 @@ using Billiards.Infrastructure.Progression;
 using Billiards.Infrastructure.Telemetry;
 using Billiards.Presentation;
 using Billiards.Presentation.Telemetry;
+using Billiards.CoreDomain.Notifications;
+using Billiards.Infrastructure.Notifications;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
@@ -140,8 +142,10 @@ namespace Billiards.Bootstrapper
             // Injects directly as IAsyncStartable / IDisposable inside VContainer registration frames
             builder.RegisterEntryPoint<GlobalAnalyticsTracker>(Lifetime.Singleton);
 
+            // Firebase Push Notifications (Global Scope)
+            builder.Register<FirebasePushWrapper>(Lifetime.Singleton).AsImplementedInterfaces();
+            builder.RegisterEntryPoint<PushTokenSyncer>(Lifetime.Singleton);
+
         }
     }
 }
-
-
