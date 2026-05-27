@@ -19,6 +19,7 @@ using Billiards.Infrastructure.Notifications;
 using UnityEngine;
 using VContainer;
 using VContainer.Unity;
+using Cysharp.Threading.Tasks;
 
 namespace Billiards.Bootstrapper
 {
@@ -39,6 +40,9 @@ namespace Billiards.Bootstrapper
 
         [Tooltip("Set the OpenAI API key here. Used to PG13-gate user-uploaded avatars before they hit Imgur.")]
         [SerializeField] private ModerationParameters _moderationParameters;
+
+        [Header("App Review Settings")]
+        [SerializeField] private AppReviewSettings _appReviewSettings = new AppReviewSettings();
 
         protected override void Configure(IContainerBuilder builder)
         {
@@ -91,6 +95,11 @@ namespace Billiards.Bootstrapper
             // Gallery Service
             builder.Register<Billiards.Infrastructure.Hardware.NativeGalleryWrapper>(Lifetime.Singleton).AsImplementedInterfaces();
 
+            // App Review configurations and service registration
+            builder.RegisterInstance(_appReviewSettings.ToCoreDomain());
+            builder.Register<Billiards.Infrastructure.Hardware.AppReviewService>(Lifetime.Singleton)
+                   .As<IAppReviewService>();
+
             // Content Moderation (PG13 gate over OpenAI omni-moderation-latest).
             // Inspector-editable Pg13ThresholdConfig → pure CoreDomain struct at registration time.
             if (_moderationParameters != null)
@@ -127,6 +136,9 @@ namespace Billiards.Bootstrapper
             {
                 var telemetryService = container.Resolve<ITelemetryService>();
                 telemetryService.Initialize();
+
+                var appReviewService = container.Resolve<IAppReviewService>();
+                appReviewService.InitializeAsync().Forget();
             });
 
             // 2. Register Anti-Corruption Layer Backend Drivers
@@ -146,6 +158,50 @@ namespace Billiards.Bootstrapper
             builder.Register<FirebasePushWrapper>(Lifetime.Singleton).AsImplementedInterfaces();
             builder.RegisterEntryPoint<PushTokenSyncer>(Lifetime.Singleton);
 
+        }
+    }
+
+    [System.Serializable]
+    public class AppReviewSettings
+    {
+        [Tooltip("Whether to use native Google Play in-app review dialog on Android.")]
+        public bool UseNativeAndroidReviewPopUp = true;
+
+        [Tooltip("Whether to use native iOS Store review dialog on iOS.")]
+        public bool UseNativeIosReviewPopUp = true;
+
+        [Tooltip("Direct URL to store listing on Android.")]
+        public string LinkToTheGameAndroid = "";
+
+        [Tooltip("Direct URL to store listing on iOS.")]
+        public string LinkToTheGameIOS = "";
+
+        [Tooltip("Number of launches before showing the review prompt.")]
+        public int LaunchCountsBeforeShowingPopup = 5;
+
+        [Tooltip("When true, the custom rating popup is shown first. Highly rated players (>= LowRatingThreshold stars) will then be redirected to the store in-app.")]
+        public bool ShowCustomPopupFirst = true;
+
+        [Tooltip("Ratings strictly below this value are treated as negative feedback (1 = very negative, 5 = all positive). Players at or above this threshold are sent to the store. Default: 4.")]
+        [Range(1, 5)]
+        public int LowRatingThreshold = 4;
+
+        [Tooltip("Message shown in-app (no animation) when the player rates below the threshold. Use this to offer a support channel instead of a store review.")]
+        [TextArea(2, 4)]
+        public string LowRatingFeedbackMessage = "We're sorry to hear that! Please contact us at support@yourgame.com so we can improve your experience.";
+
+        public AppReviewConfig ToCoreDomain()
+        {
+            return new AppReviewConfig(
+                UseNativeAndroidReviewPopUp,
+                UseNativeIosReviewPopUp,
+                LinkToTheGameAndroid,
+                LinkToTheGameIOS,
+                LaunchCountsBeforeShowingPopup,
+                ShowCustomPopupFirst,
+                LowRatingThreshold,
+                LowRatingFeedbackMessage
+            );
         }
     }
 }

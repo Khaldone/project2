@@ -32,15 +32,85 @@ public class GlobalNotificationView : SsBaseMenu
     
     [SerializeField] private Button _closeButton;
 
-    private INotificationQueue _queueService;
-    private UniTaskCompletionSource<bool> _userInputTcs;
-    private UniTaskCompletionSource _dismissTcs;
-    private CancellationTokenSource _cts;
+    [Header("Rating UI Layout")]
+    [SerializeField] private GameObject _ratingContainer;
+    [SerializeField] private Image[] _ratingStars;
+    [SerializeField] private Sprite _activeStarSprite;
+    [SerializeField] private Sprite _inactiveStarSprite;
+    [SerializeField] private Color _activeStarColor = Color.yellow;
+    [SerializeField] private Color _inactiveStarColor = Color.white;
+
+    private int _selectedStars = 5;
+    private string _defaultAcceptText = "Accept";
+    private string _defaultDeclineText = "Decline";
 
     public override void Awake()
     {
         base.Awake();
+        if (_ratingStars != null)
+        {
+            for (int i = 0; i < _ratingStars.Length; i++)
+            {
+                int index = i;
+                var buttonComponent = _ratingStars[i].GetComponent<Button>();
+                if (buttonComponent != null)
+                {
+                    buttonComponent.onClick.AddListener(() => SetSelectedStars(index + 1));
+                }
+            }
+        }
+
+        // Cache default button texts
+        if (_acceptButton != null)
+        {
+            var txt = _acceptButton.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (txt != null) _defaultAcceptText = txt.text;
+            else
+            {
+                var legacyTxt = _acceptButton.GetComponentInChildren<Text>(true);
+                if (legacyTxt != null) _defaultAcceptText = legacyTxt.text;
+            }
+        }
+        if (_declineButton != null)
+        {
+            var txt = _declineButton.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (txt != null) _defaultDeclineText = txt.text;
+            else
+            {
+                var legacyTxt = _declineButton.GetComponentInChildren<Text>(true);
+                if (legacyTxt != null) _defaultDeclineText = legacyTxt.text;
+            }
+        }
     }
+
+    private void SetSelectedStars(int stars)
+    {
+        _selectedStars = stars;
+        UpdateStarsUI();
+    }
+
+    private void UpdateStarsUI()
+    {
+        if (_ratingStars == null) return;
+        for (int i = 0; i < _ratingStars.Length; i++)
+        {
+            if (i < _selectedStars)
+            {
+                _ratingStars[i].color = _activeStarColor;
+                if (_activeStarSprite != null) _ratingStars[i].sprite = _activeStarSprite;
+            }
+            else
+            {
+                _ratingStars[i].color = _inactiveStarColor;
+                if (_inactiveStarSprite != null) _ratingStars[i].sprite = _inactiveStarSprite;
+            }
+        }
+    }
+
+    private INotificationQueue _queueService;
+    private UniTaskCompletionSource<bool> _userInputTcs;
+    private UniTaskCompletionSource _dismissTcs;
+    private CancellationTokenSource _cts;
 
     public override void Start()
     {
@@ -132,10 +202,61 @@ public class GlobalNotificationView : SsBaseMenu
         // Toggle Buttons Based on Layout
         bool isActionable = data.Layout == NotificationLayout.Actionable;
         bool isStatusOverlay = data.Layout == NotificationLayout.StatusOverlay;
+        bool isRating = data.Layout == NotificationLayout.Rating;
 
-        if (_actionButtonContainer != null) _actionButtonContainer.SetActive(isActionable);
-        if (_standardButtonContainer != null) _standardButtonContainer.SetActive(!isActionable && !isStatusOverlay);
+        if (_actionButtonContainer != null) _actionButtonContainer.SetActive(isActionable || isRating);
+        if (_standardButtonContainer != null) _standardButtonContainer.SetActive(!isActionable && !isStatusOverlay && !isRating);
         if (_closeButton != null) _closeButton.gameObject.SetActive(!isStatusOverlay);
+        if (_ratingContainer != null) _ratingContainer.SetActive(isRating);
+
+        if (isRating)
+        {
+            SetSelectedStars(5);
+
+            if (_acceptButton != null)
+            {
+                var txt = _acceptButton.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (txt != null) txt.text = "Rate Now";
+                else
+                {
+                    var legacyTxt = _acceptButton.GetComponentInChildren<Text>(true);
+                    if (legacyTxt != null) legacyTxt.text = "Rate Now";
+                }
+            }
+            if (_declineButton != null)
+            {
+                var txt = _declineButton.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (txt != null) txt.text = "Maybe Later";
+                else
+                {
+                    var legacyTxt = _declineButton.GetComponentInChildren<Text>(true);
+                    if (legacyTxt != null) legacyTxt.text = "Maybe Later";
+                }
+            }
+        }
+        else
+        {
+            if (_acceptButton != null)
+            {
+                var txt = _acceptButton.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (txt != null) txt.text = _defaultAcceptText;
+                else
+                {
+                    var legacyTxt = _acceptButton.GetComponentInChildren<Text>(true);
+                    if (legacyTxt != null) legacyTxt.text = _defaultAcceptText;
+                }
+            }
+            if (_declineButton != null)
+            {
+                var txt = _declineButton.GetComponentInChildren<TextMeshProUGUI>(true);
+                if (txt != null) txt.text = _defaultDeclineText;
+                else
+                {
+                    var legacyTxt = _declineButton.GetComponentInChildren<Text>(true);
+                    if (legacyTxt != null) legacyTxt.text = _defaultDeclineText;
+                }
+            }
+        }
 
         // 2. Animate In (via SsBaseMenu)
         if (data.SlideIn == NotificationSlideDirection.Immediate)
@@ -195,7 +316,21 @@ public class GlobalNotificationView : SsBaseMenu
         }
 
         // 4. Fire callback to CoreDomain
-        data.OnInteractionResolved?.Invoke(playerAccepted);
+        if (data.Layout == NotificationLayout.Rating)
+        {
+            if (playerAccepted)
+            {
+                data.OnRatingResolved?.Invoke(_selectedStars);
+            }
+            else
+            {
+                data.OnRatingResolved?.Invoke(0);
+            }
+        }
+        else
+        {
+            data.OnInteractionResolved?.Invoke(playerAccepted);
+        }
 
         // 5. Animate Out (via SsBaseMenu)
         if (data.SlideOut == NotificationSlideDirection.Immediate)
